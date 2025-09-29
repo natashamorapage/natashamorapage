@@ -31,9 +31,7 @@
 }
 
 *{box-sizing:border-box}
-html,body{
-  height:100%;
-}
+html,body{ height:100%; }
 
 body{
   margin:0;
@@ -56,25 +54,33 @@ body{
 }
 
 .avatar{
-  width:180px;height:180px;border-radius:50%;object-fit:cover;
+  width:clamp(120px,24vw,180px);
+  height:clamp(120px,24vw,180px);
+  border-radius:50%;object-fit:cover;
   box-shadow:0 10px 30px rgba(0,0,0,.25);
   outline:3px solid var(--ring);
 }
 
-h1{font-size:1.35rem;margin:0;font-weight:700}
-.tagline{margin:0;color:var(--muted)}
+h1{font-size:clamp(1.1rem,2.4vw,1.35rem);margin:0;font-weight:700}
+.tagline{margin:0;color:var(--muted);font-size:clamp(.9rem,2.1vw,1rem)}
 
 .icons{display:flex;justify-content:center;gap:14px;margin:14px 0 10px}
 .icons a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:999px;background:var(--card-bg);backdrop-filter: blur(6px);transition: transform .15s ease, background .15s ease}
 .icons a:hover{transform:translateY(-2px);background:rgba(255,255,255,0.2)}
-.icons svg{width:22px;height:22px;fill:#fff}
+.icons img{width:22px;height:22px}
 
+/* ===== Lista de enlaces ===== */
 .links{display:grid;gap:12px;margin-top:12px}
+
+/* Tarjeta: pasamos a GRID (3 columnas) manteniendo tu estética
+   [ miniatura | texto | espaciador ] */
 .link{
-  display:flex;
+  display:grid;
+  grid-template-columns: clamp(56px,16vw,80px) 1fr clamp(44px,6vw,56px);
   align-items:center;
-  position:relative;
-  padding:8px 16px;
+  gap: clamp(8px,2vw,12px);
+  min-height: clamp(68px,15vw,96px);
+  padding: clamp(8px,2.5vw,12px) clamp(12px,3.5vw,16px);
   border-radius:14px;
   background:#fff;
   color:var(--btn-text);
@@ -82,6 +88,8 @@ h1{font-size:1.35rem;margin:0;font-weight:700}
   font-weight:600;
   box-shadow:0 8px 30px rgba(0,0,0,.15);
   transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
+  position:relative;
+  overflow:hidden; /* por si algún emoji forzara overflow */
 }
 .link:hover{
   transform: translateY(-2px);
@@ -89,20 +97,38 @@ h1{font-size:1.35rem;margin:0;font-weight:700}
   box-shadow: 0 12px 34px rgba(0,0,0,.22);
 }
 
+/* Miniatura confinada a su columna y sin baseline raro */
 .link img{
-  width:80px;height:80px;
+  grid-column:1;
+  display:block;
+  width:100%;
+  height:clamp(56px,14vw,80px);
   border-radius:6px;
   object-fit:cover;
-  margin-right:auto;
+  margin:0;
 }
+
+/* Texto: quitamos absolute y centramos de verdad en columna 2 */
 .link span{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
+  grid-column:2;
+  display:block;
   text-align:center;
-  font-size:1rem;
-  width:100%;
+  font-size:clamp(.95rem,3.3vw,1.05rem);
+  line-height:1.28;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  hyphens:auto;
+  padding:0 .25rem;
+  max-width:100%;
+  z-index:0;
+}
+
+/* Espaciador derecho para mantener el centro óptico sin morder el texto */
+.link::after{
+  content:"";
+  grid-column:3;
+  width:100%; height:1px; /* invisible; sólo ocupa la columna */
 }
 
 /* anuncios */
@@ -119,11 +145,21 @@ h1{font-size:1.35rem;margin:0;font-weight:700}
 footer{margin-top:20px;opacity:.8;font-size:.85rem}
 footer a{color:#fff}
 
-@media (max-width:420px){
-  .link{padding:12px}
+/* Ajustes móviles pequeños (iPhone SE / Samsung chicos) */
+@media (max-width:430px){
+  .link{
+    grid-template-columns: clamp(52px,18vw,68px) 1fr clamp(40px,5vw,50px);
+  }
+  .link img{ border-radius:6px; }
 }
 
-
+/* Safe areas (iPhone notch) */
+@supports(padding:max(0px)){
+  body{
+    padding-left:max(16px, env(safe-area-inset-left));
+    padding-right:max(16px, env(safe-area-inset-right));
+  }
+}
 </style>
 
 </head>
@@ -160,23 +196,8 @@ footer a{color:#fff}
 
     <!-- Bloque de anuncios -->
     <div class="ad-wrap">
-      <!--
-        ======= AdSense =======
-        1) Reemplazá "ca-pub-xxxxxxxxxxxxxxxx" por tu ID de editor.
-        2) Reemplazá data-ad-slot por el de tu bloque de anuncios.
-        3) Este contenedor muestra un placeholder en local hasta que pegues tu código real.
-      -->
       <div class="ad-placeholder">Zona de anuncio (pegar código de AdSense aquí)</div>
-      <!-- EJEMPLO (descomenta cuando tengas aprobación):
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-xxxxxxxxxxxxxxxx" crossorigin="anonymous"></script>
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"
-           data-ad-slot="1234567890"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      -->
+      <!-- Tu código de AdSense real iría aquí cuando lo tengas aprobado -->
     </div>
 
     <footer>
