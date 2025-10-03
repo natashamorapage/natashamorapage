@@ -32,6 +32,47 @@
   src="https://www.facebook.com/tr?id=2616419075364011&ev=PageView&noscript=1"
   /></noscript>
 <!-- End Meta Pixel Code -->
+   <script>
+    // ======= SCRIPT DE TRACKING PARA PIXEL + CAPI =======
+    // Función utilitaria para leer cookies (fbp/fbc)
+    function getCookie(name){
+      return document.cookie.split('; ')
+        .find(r => r.startsWith(name+'='))?.split('=')[1];
+    }
+
+    // Selecciona todos los enlaces principales
+    document.querySelectorAll('.links a').forEach(link => {
+      link.addEventListener('click', async () => {
+        // Genera un ID único para deduplicación
+        const eventId = crypto.randomUUID();
+
+        // Dispara el evento en el navegador (Pixel)
+        fbq('track', 'Lead', {}, { eventID: eventId });
+
+        // Si tenés configurado el Worker de Cloudflare para CAPI, descomenta:
+        
+        await fetch('https://natashamora.com.ar/conv', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            event_name: 'Lead',          // Nombre del evento
+            event_id: eventId,           // Mismo ID que el Pixel
+            url: location.href,
+            fbp: getCookie('_fbp'),
+            fbc: getCookie('_fbc')
+            // test_event_code: 'TESTXXXXX' // solo mientras probás
+          })
+        });
+        */
+      });
+    });
+    // ======= /SCRIPT DE TRACKING =======
+  </script>
+
+  <script>
+    // Año dinámico que ya tenías
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8819033702877411"
      crossorigin="anonymous"></script>
   
