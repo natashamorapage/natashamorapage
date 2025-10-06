@@ -211,58 +211,90 @@
     </footer>
   </main>
 
-  <!-- Año dinámico + tracking de eventos -->
+<!-- Año dinámico + tracking de eventos (ACTUALIZADO) -->
   <script>
   // Año dinámico
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // ---- Utilidades para CAPI ----
+  // -------- Helpers de cookies / IDs --------
+  function getCookie(name){
+    return document.cookie.split('; ').find(r => r.startsWith(name+'='))?.split('=')[1];
+  }
+  function setCookie(name, value, days){
+    const d = new Date(); d.setDate(d.getDate()+days);
+    // SameSite=Lax + Secure (estás en https)
+    document.cookie = `${name}=${value}; path=/; expires=${d.toUTCString()}; SameSite=Lax; Secure`;
+  }
+  // Identificador 1st-party estable para mejorar el match
+  function getOrCreateExternalId(){
+    let id = getCookie('_extid');
+    if (!id) {
+      id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now());
+      setCookie('_extid', id, 365);
+    }
+    return id;
+  }
+
+  // Si alguna vez recolectás datos (formulario, login, etc.), setéalos aquí:
+  window.metaIdentity = {
+    email: null,        // ej: "user@email.com"
+    phone: null,        // ej: "+54911XXXXXXXX" (con código de país)
+    fb_login_id: null   // si usás Facebook Login SDK
+  };
+
+  // Enviar con Beacon (fallback fetch keepalive)
   function sendCapi(url, payload) {
     try {
       const blob = new Blob([JSON.stringify(payload)], {type: 'application/json'});
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(url, blob);
-        return;
-      }
+      if (navigator.sendBeacon) { navigator.sendBeacon(url, blob); return; }
     } catch(e){}
-    // Fallback
-    fetch(url, {
-      method:'POST',
-      headers:{'content-type':'application/json'},
-      body: JSON.stringify(payload),
-      keepalive: true
-    });
+    fetch(url, { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify(payload), keepalive: true });
   }
 
-  function getCookie(name) {
-    return document.cookie.split('; ').find(r => r.startsWith(name+'='))?.split('=')[1];
+  // Arma el payload CAPI con todo lo disponible
+  function buildCapiPayload(eventName, eventId, contentName){
+    return {
+      event_name: eventName,
+      event_id: eventId,
+      url: location.href,
+      // cookies del pixel (mejoran el match)
+      fbp: getCookie('_fbp') || undefined,
+      fbc: getCookie('_fbc') || undefined,
+      // identificador 1st-party persistente
+      external_id: getOrCreateExternalId(),
+      // opcionales (si están disponibles)
+      email: window.metaIdentity.email || undefined,
+      phone: window.metaIdentity.phone || undefined,
+      fb_login_id: window.metaIdentity.fb_login_id || undefined,
+      // datos para análisis/segmentación
+      content_name: contentName || undefined
+    };
   }
 
-  function trackClick(idElemento, nombreEvento) {
+  // Track de clicks con content_name y deduplicación por eventID
+  function trackClickWithName(idElemento, nombreEvento, contentName) {
     const el = document.getElementById(idElemento);
     if (!el) return;
 
     el.addEventListener('click', function() {
       const evID = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now());
-      // Pixel (web)
-      fbq('track', nombreEvento, {}, { eventID: evID });
 
-      // CAPI → tu Worker en /conv
-      const capiPayload = {
-        event_name: nombreEvento,
-        event_id: evID,
-        url: location.href,
-        fbp: getCookie('_fbp') || undefined,
-        fbc: getCookie('_fbc') || undefined
-      };
+      // Pixel (web)
+      const pixelParams = {};
+      if (contentName) pixelParams.content_name = contentName;
+      fbq('track', nombreEvento, pixelParams, { eventID: evID });
+
+      // CAPI (server)
+      const capiPayload = buildCapiPayload(nombreEvento, evID, contentName);
+      // usa la route que ya configuraste
       sendCapi('https://www.natashamora.com.ar/conv', capiPayload);
     });
   }
 
-  // Asignación de eventos (podés cambiarlos cuando quieras)
-  trackClick('cta-free',  'ViewContent');
-  trackClick('cta-vip',   'Lead');
-  trackClick('cta-reddit','ViewContent');
+  // Asignación de eventos
+  trackClickWithName('cta-free',   'ViewContent', 'free');
+  trackClickWithName('cta-vip',    'Lead',        'vip');
+  trackClickWithName('cta-reddit', 'ViewContent', 'reddit');
   </script>
 </body>
 </html>
