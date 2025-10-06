@@ -1,4 +1,4 @@
- <!doctype html>
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -11,10 +11,11 @@
   <meta property="og:image" content="https://picsum.photos/600/315" />
   <meta name="theme-color" content="#7C3AED" />
 
-  <!-- Fuente opcional (puedes quitar si querés 100% local) -->
+  <!-- Fuente opcional -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
   <!-- Meta Pixel Code -->
   <script>
   !function(f,b,e,v,n,t,s)
@@ -25,201 +26,152 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '2616419075364011');
+  fbq('init', '2616419075364011'); // tu Pixel ID
   fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=2616419075364011&ev=PageView&noscript=1"
   /></noscript>
   <!-- End Meta Pixel Code -->
-   <script>
-    // ======= SCRIPT DE TRACKING PARA PIXEL + CAPI =======
-    // Función utilitaria para leer cookies (fbp/fbc)
-    function getCookie(name){
-      return document.cookie.split('; ')
-        .find(r => r.startsWith(name+'='))?.split('=')[1];
-    }
 
-    // Selecciona todos los enlaces principales
-    document.querySelectorAll('.links a').forEach(link => {
-      link.addEventListener('click', async () => {
-        // Genera un ID único para deduplicación
-        const eventId = crypto.randomUUID();
-
-        // Dispara el evento en el navegador (Pixel)
-        fbq('track', 'Lead', {}, { eventID: eventId });
-
-        // Si tenés configurado el Worker de Cloudflare para CAPI, descomenta:
-        
-        await fetch('https://natashamora.com.ar/conv', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            event_name: 'Lead',          // Nombre del evento
-            event_id: eventId,           // Mismo ID que el Pixel
-            url: location.href,
-            fbp: getCookie('_fbp'),
-            fbc: getCookie('_fbc'),
-          })
-        });
-      });
-    });
-    // ======= /SCRIPT DE TRACKING =======
-  </script>
-
-  <script>
-    // Año dinámico que ya tenías
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  <!-- AdSense (solo una vez) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8819033702877411"
      crossorigin="anonymous"></script>
-  
-<style>
-:root{
-  --bg-start:#9275d5; /* violeta */
-  --bg-end:#3f3163;   /* violeta claro */
-  --card-bg: rgba(255,255,255,0.12);
-  --text:#ffffff;
-  --muted:#E9D5FF;
-  --btn:#ffffff;
-  --btn-text:#5B21B6;
-  --btn-hover:#F5F3FF;
-  --ring: rgba(255,255,255,0.25);
-  --maxw: 560px;
-}
 
-*{box-sizing:border-box}
-html,body{ height:100%; }
-
-body{
-  margin:0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  color:var(--text);
-  /* FONDO degradado radial + lineal */
-  background:
-    radial-gradient(1200px 800px at 50% -10%, var(--bg-end), transparent 60%),
-    linear-gradient(180deg, var(--bg-start), var(--bg-end));
-  background-attachment: fixed;     /* para que el degradado acompañe el scroll */
-  display:grid;
-  place-items:center;
-  padding:32px 16px;
-}
-
-.wrap{width:100%;max-width:var(--maxw);text-align:center}
-
-.profile{
-  display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:18px
-}
-
-.avatar{
-  width:clamp(120px,24vw,180px);
-  height:clamp(120px,24vw,180px);
-  border-radius:50%;object-fit:cover;
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
-  outline:3px solid var(--ring);
-}
-
-h1{font-size:clamp(1.1rem,2.4vw,1.35rem);margin:0;font-weight:700}
-.tagline{margin:0;color:var(--muted);font-size:clamp(.9rem,2.1vw,1rem)}
-
-.icons{display:flex;justify-content:center;gap:14px;margin:14px 0 10px}
-.icons a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:999px;background:var(--card-bg);backdrop-filter: blur(6px);transition: transform .15s ease, background .15s ease}
-.icons a:hover{transform:translateY(-2px);background:rgba(255,255,255,0.2)}
-.icons img{width:22px;height:22px}
-
-/* ===== Lista de enlaces ===== */
-.links{display:grid;gap:12px;margin-top:12px}
-
-/* Tarjeta: pasamos a GRID (3 columnas) manteniendo tu estética
-   [ miniatura | texto | espaciador ] */
-.link{
-  display:grid;
-  grid-template-columns: clamp(56px,16vw,80px) 1fr clamp(44px,6vw,56px);
-  align-items:center;
-  gap: clamp(8px,2vw,12px);
-  min-height: clamp(68px,15vw,96px);
-  padding: clamp(8px,2.5vw,12px) clamp(12px,3.5vw,16px);
-  border-radius:14px;
-  background:#fff;
-  color:var(--btn-text);
-  text-decoration:none;
-  font-weight:600;
-  box-shadow:0 8px 30px rgba(0,0,0,.15);
-  transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
-  position:relative;
-  overflow:hidden; /* por si algún emoji forzara overflow */
-}
-.link:hover{
-  transform: translateY(-2px);
-  background: var(--btn-hover);
-  box-shadow: 0 12px 34px rgba(0,0,0,.22);
-}
-
-/* Miniatura confinada a su columna y sin baseline raro */
-.link img{
-  grid-column:1;
-  display:block;
-  width:100%;
-  height:clamp(56px,14vw,80px);
-  border-radius:6px;
-  object-fit:cover;
-  margin:0;
-}
-
-/* Texto: quitamos absolute y centramos de verdad en columna 2 */
-.link span{
-  grid-column:2;
-  display:block;
-  text-align:center;
-  font-size:clamp(.95rem,3.3vw,1.05rem);
-  line-height:1.28;
-  white-space:normal;
-  overflow-wrap:anywhere;
-  word-break:normal;
-  hyphens:auto;
-  padding:0 .25rem;
-  max-width:100%;
-  z-index:0;
-}
-
-/* Espaciador derecho para mantener el centro óptico sin morder el texto */
-.link::after{
-  content:"";
-  grid-column:3;
-  width:100%; height:1px; /* invisible; sólo ocupa la columna */
-}
-
-/* anuncios */
-.ad-wrap{margin:22px auto 0;max-width:var(--maxw)}
-.ad-placeholder{
-  display:flex;align-items:center;justify-content:center;
-  width:100%;height:120px;
-  border-radius:14px;
-  border:2px dashed rgba(255,255,255,.35);
-  color:rgba(255,255,255,.9);
-  font-size:.95rem
-}
-
-footer{margin-top:20px;opacity:.8;font-size:.85rem}
-footer a{color:#fff}
-
-/* Ajustes móviles pequeños (iPhone SE / Samsung chicos) */
-@media (max-width:430px){
-  .link{
-    grid-template-columns: clamp(52px,18vw,68px) 1fr clamp(40px,5vw,50px);
+  <style>
+  :root{
+    --bg-start:#9275d5; /* violeta */
+    --bg-end:#3f3163;   /* violeta claro */
+    --card-bg: rgba(255,255,255,0.12);
+    --text:#ffffff;
+    --muted:#E9D5FF;
+    --btn:#ffffff;
+    --btn-text:#5B21B6;
+    --btn-hover:#F5F3FF;
+    --ring: rgba(255,255,255,0.25);
+    --maxw: 560px;
   }
-  .link img{ border-radius:6px; }
-}
 
-/* Safe areas (iPhone notch) */
-@supports(padding:max(0px)){
+  *{box-sizing:border-box}
+  html,body{ height:100%; }
+
   body{
-    padding-left:max(16px, env(safe-area-inset-left));
-    padding-right:max(16px, env(safe-area-inset-right));
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    color:var(--text);
+    background:
+      radial-gradient(1200px 800px at 50% -10%, var(--bg-end), transparent 60%),
+      linear-gradient(180deg, var(--bg-start), var(--bg-end));
+    background-attachment: fixed;
+    display:grid;
+    place-items:center;
+    padding:32px 16px;
   }
-}
-</style>
 
+  .wrap{width:100%;max-width:var(--maxw);text-align:center}
+
+  .profile{
+    display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:18px
+  }
+
+  .avatar{
+    width:clamp(120px,24vw,180px);
+    height:clamp(120px,24vw,180px);
+    border-radius:50%;object-fit:cover;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    outline:3px solid var(--ring);
+  }
+
+  h1{font-size:clamp(1.1rem,2.4vw,1.35rem);margin:0;font-weight:700}
+  .tagline{margin:0;color:var(--muted);font-size:clamp(.9rem,2.1vw,1rem)}
+
+  .icons{display:flex;justify-content:center;gap:14px;margin:14px 0 10px}
+  .icons img{width:32px;height:32px}
+
+  /* ===== Lista de enlaces ===== */
+  .links{display:grid;gap:12px;margin-top:12px}
+
+  .link{
+    display:grid;
+    grid-template-columns: clamp(56px,16vw,80px) 1fr clamp(44px,6vw,56px);
+    align-items:center;
+    gap: clamp(8px,2vw,12px);
+    min-height: clamp(68px,15vw,96px);
+    padding: clamp(8px,2.5vw,12px) clamp(12px,3.5vw,16px);
+    border-radius:14px;
+    background:#fff;
+    color:var(--btn-text);
+    text-decoration:none;
+    font-weight:600;
+    box-shadow:0 8px 30px rgba(0,0,0,.15);
+    transition:transform .15s ease, background .15s ease, box-shadow .15s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .link:hover{
+    transform: translateY(-2px);
+    background: var(--btn-hover);
+    box-shadow: 0 12px 34px rgba(0,0,0,.22);
+  }
+
+  .link img{
+    grid-column:1;
+    display:block;
+    width:100%;
+    height:clamp(56px,14vw,80px);
+    border-radius:6px;
+    object-fit:cover;
+    margin:0;
+  }
+
+  .link span{
+    grid-column:2;
+    display:block;
+    text-align:center;
+    font-size:clamp(.95rem,3.3vw,1.05rem);
+    line-height:1.28;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    word-break:normal;
+    hyphens:auto;
+    padding:0 .25rem;
+    max-width:100%;
+    z-index:0;
+  }
+
+  .link::after{
+    content:"";
+    grid-column:3;
+    width:100%; height:1px;
+  }
+
+  .ad-wrap{margin:22px auto 0;max-width:var(--maxw)}
+  .ad-placeholder{
+    display:flex;align-items:center;justify-content:center;
+    width:100%;height:120px;
+    border-radius:14px;
+    border:2px dashed rgba(255,255,255,.35);
+    color:rgba(255,255,255,.9);
+    font-size:.95rem
+  }
+
+  footer{margin-top:20px;opacity:.8;font-size:.85rem}
+  footer a{color:#fff}
+
+  @media (max-width:430px){
+    .link{
+      grid-template-columns: clamp(52px,18vw,68px) 1fr clamp(40px,5vw,50px);
+    }
+    .link img{ border-radius:6px; }
+  }
+
+  @supports(padding:max(0px)){
+    body{
+      padding-left:max(16px, env(safe-area-inset-left));
+      padding-right:max(16px, env(safe-area-inset-right));
+    }
+  }
+  </style>
 </head>
 <body>
   <main class="wrap">
@@ -231,30 +183,27 @@ footer a{color:#fff}
     </section>
 
     <nav class="icons" aria-label="Redes destacadas">
-        <img src="Fotos/OnlyBlanco.png" alt="OnlyFans" width="32" height="32" 
+      <img src="Fotos/OnlyBlanco.png" alt="OnlyFans" width="32" height="32">
     </nav>
 
-   <div class="links" role="navigation" aria-label="Enlaces principales">
-     <a class="link" id="cta-free" href="https://onlyfans.com/natashamora" target="_blank" rel="noopener">
-       <img src="Fotos/Only1.jpg" alt="Only" />
-       <span>FREE OF ACCOUNT🔥💖</span>
-     </a>
-     <a class="link" id="cta-vip" href="https://onlyfans.com/natmoravip" target="_blank" rel="noopener">
-       <img src="Fotos/Only2.JPG" alt="Only" />
-       <span>VIP OF ACCOUNT (Trial discount up to 40%)💎</span>
-     </a>
-     <a class="link" id="cta-reddit" href="https://www.reddit.com/user/NatashaMora/" target="_blank" rel="noopener">
-       <img src="Fotos/REDDIT.jpg" alt="REDDIT" />
-       <span>REDDIT📢</span>
-     </a>
-   </div>
-
+    <div class="links" role="navigation" aria-label="Enlaces principales">
+      <a class="link" id="cta-free" href="https://onlyfans.com/natashamora" target="_blank" rel="noopener noreferrer">
+        <img src="Fotos/Only1.jpg" alt="Only" />
+        <span>FREE OF ACCOUNT🔥💖</span>
+      </a>
+      <a class="link" id="cta-vip" href="https://onlyfans.com/natmoravip" target="_blank" rel="noopener noreferrer">
+        <img src="Fotos/Only2.JPG" alt="Only" />
+        <span>VIP OF ACCOUNT (Trial discount up to 40%)💎</span>
+      </a>
+      <a class="link" id="cta-reddit" href="https://www.reddit.com/user/NatashaMora/" target="_blank" rel="noopener noreferrer">
+        <img src="Fotos/REDDIT.jpg" alt="REDDIT" />
+        <span>REDDIT📢</span>
+      </a>
+    </div>
 
     <!-- Bloque de anuncios -->
     <div class="ad-wrap">
-      <div class="ad-placeholder"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8819033702877411"
-     crossorigin="anonymous"></script></div>
-      <!-- Tu código de AdSense real iría aquí cuando lo tengas aprobado -->
+      <div class="ad-placeholder">Tu anuncio aparecerá aquí</div>
     </div>
 
     <footer>
@@ -262,31 +211,59 @@ footer a{color:#fff}
     </footer>
   </main>
 
+  <!-- Año dinámico + tracking de eventos -->
   <script>
-    // Año dinámico
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  // Año dinámico
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+  // ---- Utilidades para CAPI ----
+  function sendCapi(url, payload) {
+    try {
+      const blob = new Blob([JSON.stringify(payload)], {type: 'application/json'});
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(url, blob);
+        return;
+      }
+    } catch(e){}
+    // Fallback
+    fetch(url, {
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body: JSON.stringify(payload),
+      keepalive: true
+    });
+  }
 
-  // función auxiliar para disparar eventos
+  function getCookie(name) {
+    return document.cookie.split('; ').find(r => r.startsWith(name+'='))?.split('=')[1];
+  }
+
   function trackClick(idElemento, nombreEvento) {
     const el = document.getElementById(idElemento);
-    if(el) {
-      el.addEventListener('click', function() {
-        // Se genera un ID de evento único para deduplicar con CAPI si luego lo implementás
-        const evID = crypto?.randomUUID?.() || String(Date.now());
-        fbq('track', nombreEvento, {}, { eventID: evID });
-        console.log('Evento enviado a Meta:', nombreEvento, evID);
-      });
-    }
+    if (!el) return;
+
+    el.addEventListener('click', function() {
+      const evID = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now());
+      // Pixel (web)
+      fbq('track', nombreEvento, {}, { eventID: evID });
+
+      // CAPI → tu Worker en /conv
+      const capiPayload = {
+        event_name: nombreEvento,
+        event_id: evID,
+        url: location.href,
+        fbp: getCookie('_fbp') || undefined,
+        fbc: getCookie('_fbc') || undefined
+      };
+      sendCapi('https://natashamora.com.ar/conv', capiPayload);
+    });
   }
+
+  // Asignación de eventos (podés cambiarlos cuando quieras)
   trackClick('cta-free',  'ViewContent');
   trackClick('cta-vip',   'Lead');
   trackClick('cta-reddit','ViewContent');
-});
-</script>
- 
+  </script>
 </body>
 </html>
+
