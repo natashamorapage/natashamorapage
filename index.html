@@ -231,26 +231,30 @@ footer a{color:#fff}
     </section>
 
     <nav class="icons" aria-label="Redes destacadas">
-      <button> href="https://onlyfans.com/natashamora" aria-label="OnlyFans" target="_blank" rel="noopener">
+      <a> href="https://onlyfans.com/natashamora" aria-label="OnlyFans" target="_blank" rel="noopener">
         <img src="Fotos/OnlyBlanco.png" alt="OnlyFans" width="32" height="32" />
-      </button>
+      </a>
     </nav>
 
-    <div class="links" role="navigation" aria-label="Enlaces principales">
-      <!-- Reemplazá href con tus URLs reales -->
-      <a class="link" href="https://onlyfans.com/natashamora" target="_blank" rel="noopener">
-        <img src="Fotos/Only1.jpg" alt="Only" />
-        <span>FREE OF ACCOUNT🔥💖</span>
-      </a>
-      <a class="link" href="https://onlyfans.com/natmoravip" target="_blank" rel="noopener">
-        <img src="Fotos/Only2.JPG" alt="Only" />
-        <span>VIP OF ACCOUNT (Trial discount up to 40%)💎</span>
-      </a>
-      <a class="link" href="https://www.reddit.com/user/NatashaMora/" target="_blank" rel="noopener">
-        <img src="Fotos/REDDIT.jpg" alt="REDDIT" />
-        <span>REDDIT📢</span>
-      </a>
-    </div>
+   <div class="links" role="navigation" aria-label="Enlaces principales">
+     <a class="link" id="cta-free" href="https://onlyfans.com/natashamora" target="_blank" rel="noopener">
+       <img src="Fotos/Only1.jpg" alt="Only" />
+       <span>FREE OF ACCOUNT🔥💖</span>
+     </a>
+     <a class="link" id="cta-vip" href="https://onlyfans.com/natmoravip" target="_blank" rel="noopener">
+       <img src="Fotos/Only2.JPG" alt="Only" />
+       <span>VIP OF ACCOUNT (Trial discount up to 40%)💎</span>
+     </a>
+     <a class="link" id="cta-reddit" href="https://www.reddit.com/user/NatashaMora/" target="_blank" rel="noopener">
+       <img src="Fotos/REDDIT.jpg" alt="REDDIT" />
+       <span>REDDIT📢</span>
+     </a>
+     <a class="link" id="cta-extra" href="https://tu-enlace-extra.com" target="_blank" rel="noopener">
+       <img src="Fotos/Extra.jpg" alt="Extra" />
+       <span>EXTRA🔥</span>
+     </a>
+   </div>
+
 
     <!-- Bloque de anuncios -->
     <div class="ad-wrap">
@@ -268,5 +272,26 @@ footer a{color:#fff}
     // Año dinámico
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  // función auxiliar para disparar eventos
+  function trackClick(idElemento, nombreEvento) {
+    const el = document.getElementById(idElemento);
+    if(el) {
+      el.addEventListener('click', function() {
+        // Se genera un ID de evento único para deduplicar con CAPI si luego lo implementás
+        const evID = crypto?.randomUUID?.() || String(Date.now());
+        fbq('track', nombreEvento, {}, { eventID: evID });
+        console.log('Evento enviado a Meta:', nombreEvento, evID);
+      });
+    }
+  }
+  trackClick('cta-reddit', 'ViewContent');      // visita a Reddit
+
+});
+</script>
+ 
 </body>
 </html>
